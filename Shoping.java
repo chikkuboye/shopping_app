@@ -12,7 +12,9 @@ public class Shoping {
             System.out.println("3 :Search");
             System.out.println("4 :Update");
             System.out.println("5 :Delete");
-            System.out.println("6 :exit");
+            System.out.println("6 :Number of product manufactures in between month");
+            System.out.println("7 :Name of the product staring letter");
+            System.out.println("8 :exit");
 
             choice = sc.nextInt();
 
@@ -126,8 +128,43 @@ public class Shoping {
                     break;
                 case 5:
                     System.out.println("Delete");
+                    System.out.println("Enter the id");
+                    id = sc.nextInt();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "DELETE FROM `product` WHERE `Id`="+id;
+                        Statement stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
                     break;
                 case 6:
+                    System.out.println("Number of products manufactured");
+                    String date1 = sc.next();
+                    String date2 = sc.next();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "SELECT COUNT(`Pname`) AS count FROM `product` WHERE `Manuf_date` BETWEEN '"+date1+"' AND '"+date2+"'";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while (rs.next()){
+                            int counts = rs.getInt("count");
+                            System.out.println("Number of product Manufactured ="+counts+'\n');
+
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    break;
+                case 7:
+                    System.out.println("Name of the product starting letter");
+                    break;
+                case 8:
                     System.exit(0);
             }
         }
