@@ -12,7 +12,9 @@ public class Shoping {
             System.out.println("3 :Search");
             System.out.println("4 :Update");
             System.out.println("5 :Delete");
-            System.out.println("6 :exit");
+            System.out.println("6 :Number of product manufactures in between month");
+            System.out.println("7 :Name of the product staring letter");
+            System.out.println("8 :exit");
 
             choice = sc.nextInt();
 
@@ -101,11 +103,92 @@ public class Shoping {
                     break;
                 case 4:
                     System.out.println("Update");
+                    System.out.println("Enter the id");
+                    id = sc.nextInt();
+                    System.out.println("Enter the nme ");
+                    name = sc.next();
+                    System.out.println("Enter the description ");
+                    desname = sc.next();
+                    System.out.println("Enter the manufacture date");
+                    date = sc.next();
+                    System.out.println("Enter the brand name");
+                    brandName = sc.next();
+                    System.out.println("Enter the price");
+                    price = sc.nextInt();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "UPDATE `product` SET `Pname`='"+name+"',`Description`='"+desname+"',`Manuf_date`='"+date+"',`Brand_name`='"+brandName+"',`Price`='"+price+"' WHERE `Id`="+id;
+                        Statement stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
                     break;
                 case 5:
                     System.out.println("Delete");
+                    System.out.println("Enter the id");
+                    id = sc.nextInt();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "DELETE FROM `product` WHERE `Id`="+id;
+                        Statement stmt = con.createStatement();
+                        stmt.executeUpdate(sql);
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
                     break;
                 case 6:
+                    System.out.println("Number of products manufactured");
+                    String date1 = sc.next();
+                    String date2 = sc.next();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "SELECT COUNT(`Pname`) AS count FROM `product` WHERE `Manuf_date` BETWEEN '"+date1+"' AND '"+date2+"'";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while (rs.next()){
+                            int counts = rs.getInt("count");
+                            System.out.println("Number of product Manufactured ="+counts+'\n');
+
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    break;
+                case 7:
+                    System.out.println("Name of the product starting letter");
+                    System.out.println("Enter the letter");
+                    String ch = sc.next();
+                    try{
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/shoping_db","root","");
+                        String sql = "SELECT `Pname`, `Description`, `Manuf_date`, `Brand_name`, `Price` FROM `product` WHERE `Pname` LIKE '"+ch+"%'";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while(rs.next()){
+                            name = rs.getString("Pname");
+                            String Desc = rs.getString("Description");
+                            String Manu_date = rs.getString("Manuf_date");
+                            String BrandName = rs.getString("Brand_Name");
+                            price = rs.getInt("Price");
+                            System.out.println("Purchase name ="+name);
+                            System.out.println("Description ="+Desc);
+                            System.out.println("Date ="+Manu_date);
+                            System.out.println("Brand out ="+BrandName);
+                            System.out.println("Price ="+price+'\n');
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    break;
+                case 8:
                     System.exit(0);
             }
         }
